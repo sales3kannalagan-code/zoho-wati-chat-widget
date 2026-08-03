@@ -1,0 +1,12 @@
+{
+  "name": "zoho-wati-chat-widget",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zoho CRM WATI WhatsApp Chat Widget",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "start": "vercel dev"
+  }
+}

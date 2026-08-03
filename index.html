@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoho CRM WhatsApp Chat Widget</title>
+</head>
+<body>
+
+<h2>Kannalagan Company</h2>
+<p>Zoho CRM WhatsApp Chat Widget is Active.</p>
+
+<script>
+window.$zoho = window.$zoho || {};
+$zoho.salesiq = $zoho.salesiq || {
+  widgetcode: "YOUR_WIDGET_CODE",
+  values: {},
+  ready: function(){}
+};
+
+var d = document;
+var s = d.createElement("script");
+s.type = "text/javascript";
+s.id = "zsiqscript";
+s.defer = true;
+s.src = "https://salesiq.zohopublic.com/widget";
+d.body.appendChild(s);
+</script>
+
+</body>
+</html>

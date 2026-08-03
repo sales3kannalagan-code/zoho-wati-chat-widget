@@ -1,0 +1,8 @@
+{
+  "locale": ["en"],
+  "service": "ZohoCRM",
+  "type": "widget",
+  "name": "WhatsApp Chat",
+  "version": "1.0",
+  "source_location": "/index.html"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "zoho-wati-chat-widget",
+  "version": "2.0.0",
+  "description": "Zoho CRM Widget integrated with WATI WhatsApp API — secure chat interface",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "keywords": [
+    "zoho",
+    "crm",
+    "widget",
+    "wati",
+    "whatsapp",
+    "vercel"
+  ],
+  "author": "",
+  "license": "MIT"
+}

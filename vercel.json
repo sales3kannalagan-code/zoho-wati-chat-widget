@@ -1,0 +1,59 @@
+{
+    "version": 2,
+    "name": "zoho-wati-chat-widget",
+    "builds": [
+        {
+            "src": "api/**/*.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "*.html",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "*.css",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "*.js",
+            "use": "@vercel/static",
+            "config": {
+                "zeroConfig": true
+            }
+        },
+        {
+            "src": "assets/**",
+            "use": "@vercel/static"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/messages",
+            "dest": "/api/messages.js"
+        },
+        {
+            "src": "/api/send",
+            "dest": "/api/send.js"
+        },
+        {
+            "src": "/api/contact",
+            "dest": "/api/contact.js"
+        },
+        {
+            "src": "/api/template",
+            "dest": "/api/template.js"
+        },
+        {
+            "src": "/(.*\\.(css|js|png|jpg|ico|svg|json))",
+            "dest": "/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
+        }
+    ],
+    "env": {
+        "WATI_TOKEN": "@wati_token",
+        "WATI_ENDPOINT": "@wati_endpoint"
+    }
+}

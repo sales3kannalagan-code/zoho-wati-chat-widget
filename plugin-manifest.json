@@ -1,0 +1,9 @@
+{
+    "type": "widget",
+    "location": "crm.leads.detail.tab",
+    "url": "index.html",
+    "dimensions": {
+        "width": "100%",
+        "height": "600px"
+    }
+}

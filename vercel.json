@@ -24,7 +24,23 @@
       "dest": "/api/$1.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
+      "src": "/script.js",
+      "dest": "/script.js"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/plugin-manifest.json",
+      "dest": "/plugin-manifest.json"
+    },
+    {
+      "src": "/",
       "dest": "/index.html"
     }
   ]

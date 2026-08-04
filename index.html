@@ -1,31 +1,178 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoho CRM WhatsApp Chat Widget</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WATI WhatsApp Chat — Zoho CRM Widget</title>
+  <meta name="description" content="WhatsApp chat interface powered by WATI, embedded in Zoho CRM." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Widget Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Zoho Embedded App SDK -->
+  <script src="https://live.zwidgets.com/js-sdk/1.0.3/ZohoEmbeddedAppSDK.min.js"></script>
 </head>
 <body>
 
-<h2>Kannalagan Company</h2>
-<p>Zoho CRM WhatsApp Chat Widget is Active.</p>
+<div id="app">
 
-<script>
-window.$zoho = window.$zoho || {};
-$zoho.salesiq = $zoho.salesiq || {
-  widgetcode: "siqbb05a0eb297a3a1735fcf2bb9fe91c2718e8418877fc35f1d2a88d831d8737a8",
-  values: {},
-  ready: function(){}
-};
+  <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+  <header id="header">
+    <div class="avatar" id="contact-avatar">W</div>
 
-var d = document;
-var s = d.createElement("script");
-s.type = "text/javascript";
-s.id = "zsiqscript";
-s.defer = true;
-s.src = "https://salesiq.zohopublic.com/widget";
-d.body.appendChild(s);
-</script>
+    <div class="contact-info">
+      <div class="contact-name" id="contact-name">Loading…</div>
+      <div class="contact-phone" id="contact-phone"></div>
+    </div>
 
+    <div id="connection-status" class="offline">
+      <span class="dot"></span>
+      <span id="connection-label">Offline</span>
+    </div>
+
+    <div class="header-actions">
+      <!-- Search toggle -->
+      <button class="icon-btn" id="search-btn" title="Search messages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+
+      <!-- Send Template -->
+      <button class="icon-btn" id="template-btn" title="Send Template Message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </button>
+
+      <!-- Dark mode toggle -->
+      <button class="icon-btn" id="theme-btn" title="Toggle dark / light mode">
+        <svg id="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg id="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+
+      <!-- Refresh -->
+      <button class="icon-btn" id="refresh-btn" title="Refresh messages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ SEARCH BAR ════════════════════════════════════════════ -->
+  <div id="search-bar">
+    <input type="search" id="search-input" placeholder="Search messages…" autocomplete="off" />
+  </div>
+
+  <!-- ═══ MESSAGES AREA ════════════════════════════════════════ -->
+  <main id="messages-container">
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="visible">
+      <div class="spinner"></div>
+      <span>Loading chat…</span>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <h3>No messages yet</h3>
+      <p>Send a message to start the conversation.</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="error-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p id="error-message">Could not load messages.</p>
+      <button class="retry-main" id="error-retry-btn">Try Again</button>
+    </div>
+
+    <!-- Messages rendered here by script.js -->
+  </main>
+
+  <!-- ═══ TYPING INDICATOR ══════════════════════════════════════ -->
+  <div id="typing-indicator">
+    <div class="typing-bubble">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+  </div>
+
+  <!-- ═══ INPUT AREA ════════════════════════════════════════════ -->
+  <footer id="input-area">
+    <!-- Emoji picker -->
+    <div class="emoji-wrapper">
+      <button class="icon-btn" id="emoji-btn" title="Emoji">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+        </svg>
+      </button>
+      <div id="emoji-picker-dropdown"></div>
+    </div>
+
+    <!-- Text input -->
+    <div id="msg-input-wrapper">
+      <textarea
+        id="msg-input"
+        placeholder="Type a message…"
+        rows="1"
+        autocomplete="off"
+        maxlength="4096"
+      ></textarea>
+    </div>
+
+    <!-- Send button -->
+    <button id="send-btn" title="Send message" disabled>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+      </svg>
+      <span class="spinner-sm"></span>
+    </button>
+  </footer>
+
+</div><!-- /#app -->
+
+<!-- ═══ TEMPLATE MODAL ═══════════════════════════════════════ -->
+<div id="template-modal" role="dialog" aria-modal="true" aria-label="Send Template Message">
+  <div class="modal-card">
+    <h3>Send Template Message</h3>
+    <div class="field">
+      <label for="tmpl-name">Template Name</label>
+      <input type="text" id="tmpl-name" placeholder="e.g. hello_world" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label for="tmpl-broadcast">Broadcast Name</label>
+      <input type="text" id="tmpl-broadcast" placeholder="e.g. My Campaign" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label for="tmpl-params">Parameters (key=value, comma separated)</label>
+      <input type="text" id="tmpl-params" placeholder="e.g. name=John,amount=500" autocomplete="off" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="tmpl-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="tmpl-send-btn">Send Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST CONTAINER ══════════════════════════════════════ -->
+<div id="toast-container" aria-live="polite"></div>
+
+<!-- Widget Logic -->
+<script src="script.js"></script>
 </body>
 </html>

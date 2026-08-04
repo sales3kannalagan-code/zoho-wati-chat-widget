@@ -1,9 +1,33 @@
 {
-  "name": "WATI Zoho CRM Widget",
-  "version": "1.0",
-  "description": "WATI Chat Widget for Zoho CRM",
-  "homepage": "index.html",
-  "icons": {
-    "128": "https://cdn-icons-png.flaticon.com/512/733/733585.png"
-  }
+    "name": "zoho-wati-chat-widget",
+    "displayName": "WATI WhatsApp Chat",
+    "version": "2.0",
+    "description": "WATI WhatsApp Chat interface for Zoho CRM Leads",
+    "homepage": "https://zoho-wati-chat-widget.vercel.app",
+    "icon": "assets/logo.png",
+    "publisher": {
+        "name": "YourCompany",
+        "email": "dev@yourcompany.com"
+    },
+    "modules": [
+        {
+            "module": "crm",
+            "resources": [
+                {
+                    "name": "WATI Chat",
+                    "uri": "index.html",
+                    "type": "widget"
+                }
+            ]
+        }
+    ],
+    "dependencies": {
+        "sdk": {
+            "modules": {
+                "crm": {
+                    "version": "2.x"
+                }
+            }
+        }
+    }
 }

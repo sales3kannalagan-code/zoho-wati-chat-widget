@@ -684,43 +684,73 @@ async function initZoho() {
     }
 
     ZOHO.embeddedApp.on("PageLoad", async function (data) {
-        try {
-            const entity = data?.EntityName || "";
-            const entityId = data?.EntityId || "";
+    console.log("========== PAGE LOAD ==========");
+    console.log("PageLoad Data:", data);
 
-            if (!entityId) {
-                showError("No Lead is currently open. Please open a Lead record.");
-                return;
-            }
+    try {
 
-            // Fetch full Lead record to get mobile / WhatsApp number
-            const leadData = await ZOHO.CRM.API.getRecord({
-                Entity: entity || "Leads",
-                RecordID: entityId,
-            });
+        const entity = data?.EntityName || "";
+        const entityId = data?.EntityId || "";
 
-            const lead = leadData?.data?.[0] || {};
-            const leadName = lead.Full_Name || lead.Last_Name || "Unknown Lead";
-            const mobileRaw = lead.Mobile || lead.Phone || lead.WhatsApp_No || "";
-            const whatsapp = lead.WhatsApp_No || lead.Mobile || lead.Phone || "";
-            const phone = sanitisePhone(whatsapp || mobileRaw);
+        console.log("Entity:", entity);
+        console.log("Entity ID:", entityId);
 
-            if (!phone) {
-                setContactInfo(leadName, "", "");
-                showError("No phone number found on this Lead. Please add a Mobile or WhatsApp number.");
-                return;
-            }
-
-            setContactInfo(leadName, phone, phone);
-            await loadMessages();
-        } catch (err) {
-            console.error("[initZoho] PageLoad error:", err);
-            showError("Failed to read Lead data from Zoho CRM.");
+        if (!entityId) {
+            console.error("Entity ID கிடைக்கவில்லை");
+            showError("No Lead is currently open. Please open a Lead record.");
+            return;
         }
-    });
 
-    ZOHO.embeddedApp.init();
-}
+        const leadData = await ZOHO.CRM.API.getRecord({
+            Entity: entity || "Leads",
+            RecordID: entityId,
+        });
+
+        console.log("Lead API Response:", leadData);
+
+        const lead = leadData?.data?.[0] || {};
+
+        console.log("Lead Record:", lead);
+
+        const leadName =
+            lead.Full_Name ||
+            lead.Last_Name ||
+            lead.Company ||
+            "Unknown Lead";
+
+        const whatsapp =
+            lead.WhatsApp_No ||
+            lead.Mobile ||
+            lead.Phone ||
+            "";
+
+        const phone = sanitisePhone(whatsapp);
+
+        console.log("Phone:", phone);
+
+        if (!phone) {
+            console.error("Phone Number இல்லை");
+            setContactInfo(leadName, "", "");
+            showError("No phone number found on this Lead.");
+            return;
+        }
+
+        setContactInfo(leadName, phone, phone);
+
+        console.log("Loading Messages...");
+
+        await loadMessages();
+
+        console.log("Messages Loaded");
+
+    } catch (err) {
+
+        console.error("PageLoad ERROR:", err);
+
+        showError(err.message || "Failed to read Lead");
+
+    }
+});
 
 /**
  * Update the header UI with contact details and set state.phone.

@@ -484,6 +484,9 @@ async function loadMessages() {
 
     try {
         const { messages, hasMore } = await fetchMessages(1);
+        console.log("Loaded Messages =", messages);
+console.log("Count =", messages.length);
+console.log("Has More =", hasMore);
         state.messages = messages;
         state.hasMore = hasMore;
         state.pageNumber = 1;

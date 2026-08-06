@@ -743,7 +743,7 @@ async function initZoho() {
 
         console.log("Messages Loaded");
 
-    } catch (err) {
+       } catch (err) {
 
         console.error("PageLoad ERROR:", err);
 
@@ -751,6 +751,10 @@ async function initZoho() {
 
     }
 });
+
+ZOHO.embeddedApp.init();
+
+}
 
 /**
  * Update the header UI with contact details and set state.phone.

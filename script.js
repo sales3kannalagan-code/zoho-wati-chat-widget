@@ -714,7 +714,9 @@ async function initZoho() {
         const lead = leadData?.data?.[0] || {};
 
         console.log("Lead Record:", lead);
-
+console.log("WhatsApp_No =", lead.WhatsApp_No);
+console.log("Mobile =", lead.Mobile);
+console.log("Phone =", lead.Phone);
         const leadName =
             lead.Full_Name ||
             lead.Last_Name ||

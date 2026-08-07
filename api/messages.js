@@ -58,6 +58,8 @@ module.exports = async function handler(req, res) {
   const cleanPhone = phone.replace(/\D/g, "");
 
   const url = `${WATI_ENDPOINT}/api/v1/getMessages/${encodeURIComponent(cleanPhone)}?pageSize=${pageSize}&pageNumber=${pageNumber}`;
+  console.log("PHONE =", cleanPhone);
+  console.log("URL =", url);
 
   try {
     const { status, body } = await httpsGet(url, {
